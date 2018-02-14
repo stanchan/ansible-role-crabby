@@ -1,0 +1,50 @@
+---
+- name: Check crabby package download
+  stat:
+    path: "{{ crabby_releases_path }}/{{ crabby_package }}"
+  register: crabby_bin
+
+- name: Download crabby package
+  get_url:
+    url: "{{ crabby_url }}"
+    dest: "{{ crabby_releases_path }}/"
+    validate_certs: "{{ crabby_ssl_verify }}"
+  register: crabby_check
+  when: (not crabby_bin.stat.exists) or crabby_force_deploy
+
+- name: Extract crabby package
+  unarchive:
+    copy: no
+    src: "{{ crabby_releases_path }}/{{ crabby_package }}"
+    dest: /tmp
+  when: crabby_check|changed or crabby_force_deploy
+
+- name: Copy crabby binaries
+  copy:
+    src: "/tmp/{{ item }}"
+    dest: "{{ crabby_bin_path }}/{{ item }}"
+    owner: "{{ crabby_user }}"
+    group: "{{ crabby_group }}"
+    remote_src: yes
+    mode: 0755
+  with_items:
+    - "{{ crabby_release_name }}"
+  when: crabby_check|changed or crabby_force_deploy
+  notify: restart crabby
+
+- name: Link crabby binary
+  file:
+    src: "{{ crabby_bin_path }}/{{ crabby_release_name }}"
+    dest: "{{ item }}"
+    state: link
+  with_items:
+    - "{{ crabby_bin_path }}/crabby"
+    - /usr/bin/crabby
+
+- name: Change crabby directory permissions and ownership
+  file:
+    path: "{{ crabby_root_path }}"
+    owner: "{{ crabby_user }}"
+    group: "{{ crabby_group }}"
+    mode: u=rwX,g=rX,o=rX
+    recurse: yes

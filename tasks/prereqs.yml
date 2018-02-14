@@ -1,0 +1,37 @@
+---
+- name: Install dependent packages
+  apt:
+    pkg: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items: "{{ required_packages }}"
+
+- name: Create crabby group
+  group:
+    name: "{{ crabby_group }}"
+    system: yes
+    state: present
+
+- name: Create crabby user
+  user:
+    name: "{{ crabby_user }}"
+    state: present
+    comment: "{{ crabby_user }}"
+    group: "{{ crabby_group }}"
+    shell: /sbin/nologin
+    createhome: no
+    system: yes
+
+- name: Check filesystem paths
+  file:
+    dest: "{{ item }}"
+    owner: "{{ crabby_user }}"
+    group: "{{ crabby_group }}"
+    state: directory
+  with_items:
+    - "{{ crabby_root_path }}"
+    - "{{ crabby_releases_path }}"
+    - "{{ crabby_bin_path }}"
+    - "{{ crabby_conf_file | dirname }}"
+    - "{{ crabby_log_file | dirname }}"

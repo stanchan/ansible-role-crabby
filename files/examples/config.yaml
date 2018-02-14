@@ -1,0 +1,48 @@
+jobs:
+  - name: my_site_some_page
+    type: selenium
+    url:  https://mysite.org/some/page/
+    interval: 30
+    cookies:
+     - name: auth
+       domain: mysite.org
+       path: /
+       value: DEADBEEFC0W123456789
+       secure: true
+     - name: session
+       domain: mysite.org
+       path: /
+       value: abDijfeiF3290FijEIO30NC9jkqQER
+       secure: false
+  - name: another_page
+    type: simple
+    url: https://some-other-site.org/some/page
+    interval: 10
+ selenium:
+  url: http://localhost:4444/wd/hub
+  job-stagger-offset: 30
+ storage:
+     graphite:
+         host:  graphite.mysite.org
+         port: 2003
+         protocol: tcp
+         metric-namespace: crabby.crabby-sfo-1
+     dogstatsd:
+         host: localhost
+         port: 8125
+         metric-namespace: crabby.crabby-sfo-1
+         tags:
+             - crabby-sfo-1
+     prometheus:
+         host: prometheus.mysite.org
+         port: 9091
+         metric-namespace: crabby.crabby-sfo-1
+     riemann:
+         host: riemann.mysite.org
+         port: 5555
+         metric-namespace: crabby.crabby-sfo-1
+         tags:
+             - crabby-sfo-1
+ report-internal-metrics: true
+ internal-metrics-gathering-interval: 15
+ 

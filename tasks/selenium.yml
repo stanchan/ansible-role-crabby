@@ -1,0 +1,21 @@
+---
+- name: create compose directory
+  file:
+    path: /srv/docker-crabby
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: deploy compose file
+  template:
+    src: docker-compose.yml.j2
+    dest: /srv/docker-crabby/docker-compose.yml
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart docker services
+
+- name: start docker services
+  docker_service:
+    project_src: /srv/docker-crabby

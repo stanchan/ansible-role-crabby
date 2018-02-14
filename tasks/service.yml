@@ -1,0 +1,43 @@
+---
+- name: Check for init.d service
+  set_fact:
+    is_service: yes
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "14"
+
+- name: Check for systemd service
+  set_fact:
+    is_systemd: yes
+  when: (ansible_os_family  == "RedHat" and ansible_distribution_major_version >= "7") or (ansible_distribution == "Ubuntu" and ansible_distribution_major_version >= "16") or (ansible_distribution == "Debian" and ansible_distribution_major_version >= "8")
+
+- block:
+  - name: Create crabby sysv init script (Ubuntu 14.04)
+    template:
+      src: crabby.init.j2
+      dest: /etc/init.d/crabby
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: Enable crabby service
+    service:
+      name: crabby
+      enabled: yes
+      state: started
+  when: is_service
+
+- block:
+  - name: Create crabby systemd service
+    template:
+      src: crabby.service.j2
+      dest: "{{ systemd_service_dir }}/crabby.service"
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: Enable crabby systemd service
+    systemd:
+      name: crabby
+      enabled: yes
+      daemon-reload: yes
+      state: started
+  when: is_systemd

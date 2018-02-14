@@ -1,0 +1,10 @@
+---  
+  - name: Create crabby config
+    template:
+      src: config.yaml.j2
+      dest: "{{ crabby_conf_file }}"
+      mode: 0644
+      owner: "{{ crabby_user }}"
+      group: "{{ crabby_group }}"
+    notify:
+      - restart crabby

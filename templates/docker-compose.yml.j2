@@ -1,0 +1,16 @@
+version: "3"
+services:
+  selenium:
+    image: selenium/standalone-chrome
+    restart: unless-stopped
+    hostname: selenium
+    ports:
+      - "4444:4444"
+    networks:
+      {{ crabby_network }}:
+        aliases:
+          - selenium
+
+networks:
+  {{ crabby_network }}:
+    driver: {{ crabby_network_type }}

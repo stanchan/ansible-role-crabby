@@ -1,0 +1,55 @@
+---
+# defaults file for ansible-role-crabby
+required_packages: []
+systemd_service_dir: /lib/systemd/system
+is_service: no
+is_systemd: no
+
+crabby_version: 1.2
+crabby_release_system: linux-amd64
+crabby_release_name: "crabby-{{ crabby_version }}-{{ crabby_release_system }}"
+crabby_package: "crabby-{{ crabby_version }}-{{ crabby_release_system }}.tar.gz"
+crabby_url: "https://github.com/stanchan/crabby/releases/download/{{ crabby_version }}/{{ crabby_package }}"
+crabby_force_deploy: no
+crabby_ssl_verify: yes
+
+crabby_user: crabby
+crabby_group: crabby
+
+crabby_root_path: /opt/crabby
+crabby_conf_file: "{{ crabby_root_path }}/crabby.yaml"
+crabby_bin_path: "{{ crabby_root_path }}/bin"
+crabby_releases_path: "{{ crabby_root_path }}/releases"
+crabby_log_file: "/var/log/crabby/crabby.log"
+
+crabby_service_options:
+  - "config={{ crabby_conf_file }}"
+
+crabby_configuration:
+  jobs:
+    - name: my_site_some_page
+      type: selenium
+      url:  https://mysite.org/some/page/
+      interval: 30
+      cookies:
+        - name: auth
+          domain: mysite.org
+          path: /
+          value: DEADBEEFC0W123456789
+          secure: true
+        - name: session
+          domain: mysite.org
+          path: /
+          value: abDijfeiF3290FijEIO30NC9jkqQER
+          secure: false
+    - name: another_page
+      type: simple
+      url: https://some-other-site.org/some/page
+      interval: 10
+  storage:
+    prometheus:
+      host: prometheus.mysite.org
+      port: 9091
+      metric-namespace: crabby.crabby-sfc-1
+  report-internal-metrics: true
+  internal-metrics-gathering-interval: 15

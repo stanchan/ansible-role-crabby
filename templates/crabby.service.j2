@@ -1,0 +1,18 @@
+[Unit]
+Description=Crabby service
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User={{ crabby_user }}
+Group={{ crabby_group }}
+Restart=on-failure
+ExecStart=/bin/sh -c "{{ crabby_bin_path }}/crabby {% for option in crabby_service_options %}--{{ option }} {% endfor %}> {{ crabby_log_file }} 2>&1"
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGTERM
+LimitNOFILE=10000
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target
