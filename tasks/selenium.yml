@@ -9,7 +9,7 @@
 
 - name: deploy compose file
   template:
-    src: docker-compose.yml.j2
+    src: "{{ crabby_compose_template }}"
     dest: /srv/docker-crabby/docker-compose.yml
     owner: root
     group: root

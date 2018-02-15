@@ -53,3 +53,5 @@ crabby_configuration:
       metric-namespace: crabby.crabby-sfc-1
   report-internal-metrics: true
   internal-metrics-gathering-interval: 15
+
+crabby_compose_template: docker-compose.yml.j2
