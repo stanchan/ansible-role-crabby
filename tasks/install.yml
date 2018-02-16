@@ -2,7 +2,7 @@
 - name: Check crabby package download
   stat:
     path: "{{ crabby_releases_path }}/{{ crabby_package }}"
-  register: crabby_bin
+  register: crabby_package
 
 - name: Download crabby package
   get_url:
@@ -10,14 +10,19 @@
     dest: "{{ crabby_releases_path }}/"
     validate_certs: "{{ crabby_ssl_verify }}"
   register: crabby_check
-  when: (not crabby_bin.stat.exists) or crabby_force_deploy
+  when: (not crabby_package.stat.exists) or crabby_force_deploy
+
+- name: Check crabby deployed
+  stat:
+    path: "{{ crabby_bin_path }}/{{ crabby_release_name }}"
+  register: crabby_bin
 
 - name: Extract crabby package
   unarchive:
     copy: no
     src: "{{ crabby_releases_path }}/{{ crabby_package }}"
     dest: /tmp
-  when: crabby_check|changed or crabby_force_deploy
+  when: (not crabby_bin.stat.exists or crabby_check|changed) or crabby_force_deploy
 
 - name: Copy crabby binaries
   copy:
@@ -29,7 +34,7 @@
     mode: 0755
   with_items:
     - "{{ crabby_release_name }}"
-  when: crabby_check|changed or crabby_force_deploy
+  when: (not crabby_bin.stat.exists or crabby_check|changed) or crabby_force_deploy
   notify: restart crabby
 
 - name: Link crabby binary

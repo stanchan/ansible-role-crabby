@@ -50,7 +50,7 @@ crabby_configuration:
     prometheus:
       host: prometheus.mysite.org
       port: 9091
-      metric-namespace: crabby.crabby-sfc-1
+      metric-namespace: crabby:crabby_sfc_1
   report-internal-metrics: true
   internal-metrics-gathering-interval: 15
 
