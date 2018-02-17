@@ -27,31 +27,21 @@ crabby_service_options:
 
 crabby_configuration:
   jobs:
-    - name: my_site_some_page
+    - name: Google
       type: selenium
-      url:  https://mysite.org/some/page/
+      url:  https://www.google.com/
       interval: 30
-      cookies:
-        - name: auth
-          domain: mysite.org
-          path: /
-          value: DEADBEEFC0W123456789
-          secure: true
-        - name: session
-          domain: mysite.org
-          path: /
-          value: abDijfeiF3290FijEIO30NC9jkqQER
-          secure: false
-    - name: another_page
+    - name: Google
       type: simple
-      url: https://some-other-site.org/some/page
+      url: https://www.google.com/
       interval: 10
   storage:
     prometheus:
-      host: prometheus.mysite.org
+      host: 127.0.0.1
       port: 9091
-      metric-namespace: crabby:crabby_sfc_1
+      metric-namespace: crabby_sfo_1
   report-internal-metrics: true
   internal-metrics-gathering-interval: 15
 
 crabby_compose_template: docker-compose.yml.j2
+crabby_debug: no
