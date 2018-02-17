@@ -2,7 +2,7 @@
 - name: Check crabby package download
   stat:
     path: "{{ crabby_releases_path }}/{{ crabby_package }}"
-  register: crabby_package
+  register: crabby_download
 
 - name: Download crabby package
   get_url:
@@ -10,7 +10,7 @@
     dest: "{{ crabby_releases_path }}/"
     validate_certs: "{{ crabby_ssl_verify }}"
   register: crabby_check
-  when: (not crabby_package.stat.exists) or crabby_force_deploy
+  when: (not crabby_download.stat.exists) or crabby_force_deploy
 
 - name: Check crabby deployed
   stat:
