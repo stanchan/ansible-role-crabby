@@ -1,7 +1,8 @@
 version: "3"
 services:
   selenium:
-    image: {% if crabby_debug %}selenium/standalone-chrome{% else %}selenium/standalone-chrome-debug{% endif %}
+    image: {% if crabby_debug %}selenium/standalone-chrome{% else %}selenium/standalone-chrome-debug
+{% endif %}
     restart: unless-stopped
     hostname: selenium
     ports:
