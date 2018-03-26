@@ -1,5 +1,18 @@
 version: "3"
 services:
+{% if is_phantomjs_agent %}
+  phantomjs:
+    image: stanchan/phantomjs:2.1.1
+    restart: unless-stopped
+    hostname: phantomjs
+    ports:
+      - "127.0.0.1:8910:8910"
+    networks:
+      {{ crabby_network }}:
+        aliases:
+          - phantomjs
+{% endif %}
+{% if is_selenium_agent %}
   selenium:
     image: {% if crabby_debug %}selenium/standalone-chrome{% else %}selenium/standalone-chrome-debug{% endif %}
 
@@ -13,7 +26,7 @@ services:
       {{ crabby_network }}:
         aliases:
           - selenium
-
+{% endif %}
 networks:
   {{ crabby_network }}:
     driver: {{ crabby_network_type }}

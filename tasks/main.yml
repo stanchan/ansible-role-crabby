@@ -8,6 +8,10 @@
   set_fact:
     is_selenium_agent: "{{ inventory_hostname in groups['selenium_agent'] | default([]) }}"
 
+- name: Set is_phantomjs_agent if in selenium_agent group
+  set_fact:
+    is_phantomjs_agent: "{{ inventory_hostname in groups['phantomjs_agent'] | default([]) }}"
+
 - name: Setup prereqs
   include_tasks: prereqs.yml
   when: is_crabby
@@ -32,8 +36,8 @@
   tags:
     - config
 
-- name: Setup selenium agents
-  include_tasks: selenium.yml
-  when: is_selenium_agent
+- name: Setup compose agents
+  include_tasks: compose.yml
+  when: is_selenium_agent or is_phantomjs_agent
   tags:
     - install
