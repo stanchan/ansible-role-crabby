@@ -8,8 +8,8 @@ services:
     restart: unless-stopped
     hostname: caddy
     volumes:
-      - /config/Caddyfile:/etc/Caddyfile
-      - /config/caddy:/root/.caddy
+      - /srv/caddy/Caddyfile:/etc/Caddyfile
+      - /srv/caddy/caddy:/root/.caddy
     ports:
       - "{{ selenium_proxy_port }}:{{ selenium_proxy_port }}"
     networks:
