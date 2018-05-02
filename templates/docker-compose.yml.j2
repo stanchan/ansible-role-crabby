@@ -1,31 +1,116 @@
-version: "3"
+#jinja2: lstrip_blocks: True
+version: '3'
+
 services:
-{% if is_phantomjs_agent %}
-  phantomjs:
-    image: stanchan/phantomjs:2.1.1
+{% if is_selenium_caddy %}
+  caddy:
+    image: "stanchan/caddy:0.10.11"
     restart: unless-stopped
-    hostname: phantomjs
+    hostname: caddy
+    volumes:
+      - /config/Caddyfile:/etc/Caddyfile
+      - /config/caddy:/root/.caddy
     ports:
-      - "127.0.0.1:8910:8910"
-    networks:
-      {{ crabby_network }}:
-        aliases:
-          - phantomjs
+      - "{{ selenium_proxy_port }}:{{ selenium_proxy_port }}"
+
 {% endif %}
-{% if is_selenium_agent %}
-  selenium:
-    image: {% if crabby_debug %}selenium/standalone-chrome{% else %}selenium/standalone-chrome-debug{% endif %}
-
+{% if is_crabby and crabby_deploy_mode == "docker" %}
+  crabby:
+    image: stanchan/crabby:{{ crabby_version }}
     restart: unless-stopped
-    hostname: selenium
-    ports:
-      - "127.0.0.1:4444:4444"
-{% if crabby_debug %}      - "127.0.0.1:5900:5900"{% endif %}
+{% if is_selenium_hub %}
+    depends_on:
+      - hub
+{% endif %}
+    hostname: crabby
+    environment:
+      - CRABBY_CONFIG=/config/config.yaml
+    volumes:
+      - {{ crabby_root_path }}/config:/config
 
+{% endif %}
+{% if is_selenium_hub %}
+  hub:
+    image: stanchan/selenium:latest
+    restart: unless-stopped
+    hostname: hub
+    privileged: true
+    environment:
+      - SELENIUM_HUB_HOST={{ selenium_hub_host }}
+      - SELENIUM_HUB_PORT={{ selenium_hub_port }}
+      - GRID=true
+      - CHROME=false
+      - FIREFOX=false
+    ports:
+      - {{ selenium_hub_port }}:{{ selenium_hub_port }}
+    volumes:
+      - /dev/shm:/dev/shm
     networks:
       {{ crabby_network }}:
         aliases:
-          - selenium
+          - hub
+
+{% endif %}
+{% if is_selenium_chrome %}
+  chrome:
+    image: stanchan/selenium:latest
+    restart: unless-stopped
+{% if is_selenium_hub %}
+    depends_on:
+      - hub
+{% endif %}
+    hostname: chrome
+    privileged: true
+    environment:
+      - NOVNC=true
+      - SELENIUM_HUB_HOST={{ selenium_hub_host }}
+      - SELENIUM_HUB_PORT={{ selenium_hub_port }}
+      - SELENIUM_NODE_HOST={% raw %}{{CONTAINER_IP}}{% endraw %}
+      - SCREEN_WIDTH=1300
+      - SCREEN_HEIGHT=999
+      - VIDEO=false
+      - GRID=false
+      - CHROME=true
+      - FIREFOX=false
+    ports:
+      # VNC: See what's going on by connecting your VNC client to 0.0.0.0:5900
+      - 5900:25900
+      # noVNC: See what's going on by hitting http://0.0.0.0:6080 in your browser
+      #        Important: http://127.0.0.1:6080 works but http://localhost:6080 doesn't
+      - 6080:26080
+    volumes:
+      - /dev/shm:/dev/shm
+
+{% endif %}
+{% if is_selenium_firefox %}
+  firefox:
+    image: stanchan/selenium:latest
+    restart: unless-stopped
+{% if is_selenium_hub %}
+    depends_on:
+      - hub
+{% endif %}
+    privileged: true
+    hostname: firefox
+    environment:
+      - NOVNC=true
+      - SELENIUM_HUB_HOST={{ selenium_hub_host }}
+      - SELENIUM_HUB_PORT={{ selenium_hub_port }}
+      - SELENIUM_NODE_HOST={% raw %}{{CONTAINER_IP}}{% endraw %}
+      - SCREEN_WIDTH=1300
+      - SCREEN_HEIGHT=999
+      - VIDEO=false
+      - GRID=false
+      - CHROME=false
+      - FIREFOX=true
+    ports:
+      # VNC: See what's going on by connecting your VNC client to 0.0.0.0:5901
+      - 5901:25900
+      # noVNC: See what's going on by hitting http://0.0.0.0:6081 in your browser
+      - 6081:26080
+    volumes:
+      - /dev/shm:/dev/shm
+
 {% endif %}
 networks:
   {{ crabby_network }}:

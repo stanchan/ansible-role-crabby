@@ -1,4 +1,31 @@
 ---
+- block:
+  - name: create caddy configs directory
+    file:
+      path: /srv/caddy/config
+      state: directory
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: create caddy state directory
+    file:
+      path: /srv/caddy/.caddy
+      state: directory
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: deploy caddy file
+    template:
+      src: Caddyfile.j2
+      dest: /srv/caddy/Caddyfile
+      owner: root
+      group: root
+      mode: 0640
+    notify: restart docker services
+  when: is_caddy
+
 - name: create compose directory
   file:
     path: /srv/docker-crabby

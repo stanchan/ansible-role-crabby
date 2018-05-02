@@ -1,10 +1,22 @@
----  
-  - name: Create crabby config
-    template:
-      src: config.yaml.j2
-      dest: "{{ crabby_conf_file }}"
-      mode: 0644
-      owner: "{{ crabby_user }}"
-      group: "{{ crabby_group }}"
-    notify:
-      - restart crabby
+---
+- name: Create crabby config for bin deployment
+  template:
+    src: config.yaml.j2
+    dest: "{{ crabby_conf_file }}"
+    mode: 0644
+    owner: "{{ crabby_user }}"
+    group: "{{ crabby_group }}"
+  when: crabby_deploy_mode == "bin"
+  notify:
+    - restart crabby
+
+- name: Create crabby config for docker deployment
+  template:
+    src: config.yaml.j2
+    dest: "{{ crabby_conf_file }}"
+    mode: 0644
+    owner: "{{ crabby_user }}"
+    group: "{{ crabby_group }}"
+  when: crabby_deploy_mode == "docker"
+  notify:
+    - restart docker services

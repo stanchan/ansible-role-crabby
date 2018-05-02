@@ -1,0 +1,11 @@
+:{{ selenium_proxy_port }} {
+    proxy / http://{{ selenium_hub_host }}:{{ selenium_hub_port }} {
+        transparent
+        max_fails 10
+        fail_timeout 30s
+        keepalive 1
+    }
+    timeouts none
+    log / stdout "{remote} {when} {method} {uri} {proto} {status} {size} {>User-Agent} {latency} || {request} || BODY: {request_body}"
+    errors stdout
+}

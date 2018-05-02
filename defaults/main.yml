@@ -4,6 +4,7 @@ required_packages: []
 systemd_service_dir: /lib/systemd/system
 is_service: no
 is_systemd: no
+crabby_deploy_mode: docker
 
 crabby_version: 1.2
 crabby_release_system: linux-amd64
@@ -16,8 +17,7 @@ crabby_ssl_verify: yes
 crabby_user: crabby
 crabby_group: crabby
 
-crabby_root_path: /opt/crabby
-crabby_conf_file: "{{ crabby_root_path }}/crabby.yaml"
+crabby_conf_file: "{{ crabby_root_path }}/config/crabby.yaml"
 crabby_bin_path: "{{ crabby_root_path }}/bin"
 crabby_releases_path: "{{ crabby_root_path }}/releases"
 crabby_log_file: "/var/log/crabby/crabby.log"
@@ -25,16 +25,41 @@ crabby_log_file: "/var/log/crabby/crabby.log"
 crabby_service_options:
   - "config={{ crabby_conf_file }}"
 
+selenium_hub_host: hub
+selenium_hub_port: 4444
+
 crabby_configuration:
   jobs:
     - name: Google
       type: selenium
       url:  https://www.google.com/
       interval: 30
+      cookies:
+        - name: session
+          domain: localhost
+          path: /
+          value: abDijfeiF3290FijEIO30NC9jkqQER
+          secure: true
+      headers:
+        - name: Content-Type
+          value: application/json
+          enabled: true
+        - name: Accept
+          value: application/json
+          enabled: true
+      extensions:
+        - name: ModHeader
+          path: /ext/idgpnmonknjnojddfkpgkljpfnnfcklj.crx
+          context: chrome-extension:///idgpnmonknjnojddfkpgkljpfnnfcklj/icon.png
+          initialize: true
     - name: Google
       type: simple
       url: https://www.google.com/
       interval: 10
+  selenium:
+    url: "http://{{ selenium_hub_host }}:{{ selenium_hub_port }}/wd/hub"
+    job-stagger-offset: 15
+    debug: false
   storage:
     prometheus:
       host: 127.0.0.1

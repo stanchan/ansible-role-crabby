@@ -1,0 +1,30 @@
+---
+- name: Set is_crabby if in crabby group
+  set_fact:
+    is_crabby: "{{ inventory_hostname in groups['crabby'] | default([]) }}"
+
+- name: Set is_selenium_caddy if in selenium_caddy group
+  set_fact:
+    is_selenium_agent: "{{ inventory_hostname in groups['selenium_caddy'] | default([]) }}"
+
+- name: Set is_selenium_hub if in selenium_hub group
+  set_fact:
+    is_selenium_agent: "{{ inventory_hostname in groups['selenium_hub'] | default([]) }}"
+
+- name: Set is_selenium_chrome if in selenium_chrome group
+  set_fact:
+    is_selenium_agent: "{{ inventory_hostname in groups['selenium_chrome'] | default([]) }}"
+
+- name: Set is_selenium_firefox if in selenium_firefox group
+  set_fact:
+    is_selenium_agent: "{{ inventory_hostname in groups['selenium_firefox'] | default([]) }}"
+
+- name: Set crabby_root_path if deployment is bin
+  set_fact:
+    crabby_root_path: /opt/crabby
+  when: crabby_deploy_mode == "bin"
+
+- name: Set crabby_root_path if deployment is docker
+  set_fact:
+    crabby_root_path: /srv/crabby
+  when: crabby_deploy_mode == "docker"

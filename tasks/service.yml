@@ -23,7 +23,7 @@
       name: crabby
       enabled: yes
       state: started
-  when: is_service
+  when: is_service and crabby_deploy_mode == "bin"
 
 - block:
   - name: Create crabby systemd service
@@ -40,4 +40,4 @@
       enabled: yes
       daemon-reload: yes
       state: started
-  when: is_systemd
+  when: is_systemd and crabby_deploy_mode == "bin"
