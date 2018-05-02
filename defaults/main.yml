@@ -25,6 +25,7 @@ crabby_log_file: "/var/log/crabby/crabby.log"
 crabby_service_options:
   - "config={{ crabby_conf_file }}"
 
+selenium_proxy_port: 4000
 selenium_hub_host: hub
 selenium_hub_port: 4444
 
