@@ -1,5 +1,5 @@
-:{{ selenium_proxy_port }} {
-    proxy / http://{{ selenium_hub_host }}:{{ selenium_hub_port }} {
+:{{ crabby_selenium_proxy_port }} {
+    proxy / http://{{ crabby_selenium_hub_host }}:{{ crabby_selenium_hub_port }} {
         transparent
         max_fails 10
         fail_timeout 30s
