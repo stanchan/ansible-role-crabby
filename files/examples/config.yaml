@@ -14,6 +14,18 @@ jobs:
        path: /
        value: abDijfeiF3290FijEIO30NC9jkqQER
        secure: false
+    headers:
+      - name: Content-Type
+        value: application/json
+        enabled: true
+      - name: Accept
+        value: application/json
+        enabled: true
+    extensions:
+      - name: ModHeader
+        path: /ext/idgpnmonknjnojddfkpgkljpfnnfcklj.crx
+        context: chrome-extension:///idgpnmonknjnojddfkpgkljpfnnfcklj/icon.png
+        initialize: true
   - name: another_page
     type: simple
     url: https://some-other-site.org/some/page
@@ -21,6 +33,7 @@ jobs:
  selenium:
   url: http://localhost:4444/wd/hub
   job-stagger-offset: 30
+  debug: false
  storage:
      graphite:
          host:  graphite.mysite.org
@@ -36,7 +49,7 @@ jobs:
      prometheus:
          host: prometheus.mysite.org
          port: 9091
-         metric-namespace: crabby.crabby-sfo-1
+         metric-namespace: crabby-sfc-1
      riemann:
          host: riemann.mysite.org
          port: 5555
@@ -45,4 +58,3 @@ jobs:
              - crabby-sfo-1
  report-internal-metrics: true
  internal-metrics-gathering-interval: 15
- 
