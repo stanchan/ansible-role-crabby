@@ -31,7 +31,7 @@ jobs:
     url: https://some-other-site.org/some/page
     interval: 10
  selenium:
-  url: http://localhost:4444/wd/hub
+  url: http://localhost:4000/wd/hub
   job-stagger-offset: 30
   debug: false
  storage:

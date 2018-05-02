@@ -12,6 +12,10 @@ services:
       - /config/caddy:/root/.caddy
     ports:
       - "{{ selenium_proxy_port }}:{{ selenium_proxy_port }}"
+    networks:
+      {{ crabby_network }}:
+        aliases:
+          - caddy
 
 {% endif %}
 {% if is_crabby and crabby_deploy_mode == "docker" %}
@@ -27,6 +31,10 @@ services:
       - CRABBY_CONFIG=/config/config.yaml
     volumes:
       - {{ crabby_root_path }}/config:/config
+    networks:
+      {{ crabby_network }}:
+        aliases:
+          - crabby
 
 {% endif %}
 {% if is_selenium_hub %}
@@ -81,6 +89,10 @@ services:
       - 6080:26080
     volumes:
       - /dev/shm:/dev/shm
+    networks:
+      {{ crabby_network }}:
+        aliases:
+          - chrome
 
 {% endif %}
 {% if is_selenium_firefox %}
@@ -112,6 +124,10 @@ services:
       - 6081:26080
     volumes:
       - /dev/shm:/dev/shm
+    networks:
+      {{ crabby_network }}:
+        aliases:
+          - firefox
 
 {% endif %}
 networks:
