@@ -8,10 +8,10 @@ services:
     restart: unless-stopped
     hostname: caddy
     volumes:
-      - /srv/caddy/Caddyfile:/etc/Caddyfile
-      - /srv/caddy/caddy:/root/.caddy
+      - {{ crabby_caddy_root_path }}/config/Caddyfile:/etc/Caddyfile
+      - {{ crabby_caddy_root_path }}/.caddy:/root/.caddy
     ports:
-      - "{{ selenium_proxy_port }}:{{ selenium_proxy_port }}"
+      - "{{ crabby_selenium_proxy_port }}:{{ crabby_selenium_proxy_port }}"
     networks:
       {{ crabby_network }}:
         aliases:
@@ -28,7 +28,7 @@ services:
 {% endif %}
     hostname: crabby
     environment:
-      - CRABBY_CONFIG=/config/config.yaml
+      - CRABBY_CONFIG=/config/{{ crabby_conf_file|basename }}
     volumes:
       - {{ crabby_root_path }}/config:/config
     networks:
@@ -44,13 +44,13 @@ services:
     hostname: hub
     privileged: true
     environment:
-      - SELENIUM_HUB_HOST={{ selenium_hub_host }}
-      - SELENIUM_HUB_PORT={{ selenium_hub_port }}
+      - SELENIUM_HUB_HOST={{ crabby_selenium_hub_host }}
+      - SELENIUM_HUB_PORT={{ crabby_selenium_hub_port }}
       - GRID=true
       - CHROME=false
       - FIREFOX=false
     ports:
-      - {{ selenium_hub_port }}:{{ selenium_hub_port }}
+      - {{ crabby_selenium_hub_port }}:{{ crabby_selenium_hub_port }}
     volumes:
       - /dev/shm:/dev/shm
     networks:
@@ -71,8 +71,8 @@ services:
     privileged: true
     environment:
       - NOVNC=true
-      - SELENIUM_HUB_HOST={{ selenium_hub_host }}
-      - SELENIUM_HUB_PORT={{ selenium_hub_port }}
+      - SELENIUM_HUB_HOST={{ crabby_selenium_hub_host }}
+      - SELENIUM_HUB_PORT={{ crabby_selenium_hub_port }}
       - SELENIUM_NODE_HOST={% raw %}{{CONTAINER_IP}}{% endraw %}
 
       - SCREEN_WIDTH=1300
@@ -107,8 +107,8 @@ services:
     hostname: firefox
     environment:
       - NOVNC=true
-      - SELENIUM_HUB_HOST={{ selenium_hub_host }}
-      - SELENIUM_HUB_PORT={{ selenium_hub_port }}
+      - SELENIUM_HUB_HOST={{ crabby_selenium_hub_host }}
+      - SELENIUM_HUB_PORT={{ crabby_selenium_hub_port }}
       - SELENIUM_NODE_HOST={% raw %}{{CONTAINER_IP}}{% endraw %}
 
       - SCREEN_WIDTH=1300

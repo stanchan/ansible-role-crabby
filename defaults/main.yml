@@ -17,7 +17,7 @@ crabby_ssl_verify: yes
 crabby_user: crabby
 crabby_group: crabby
 
-crabby_conf_file: "{{ crabby_root_path }}/config/crabby.yaml"
+crabby_conf_file: "{{ crabby_root_path }}/config/config.yaml"
 crabby_bin_path: "{{ crabby_root_path }}/bin"
 crabby_releases_path: "{{ crabby_root_path }}/releases"
 crabby_log_file: "/var/log/crabby/crabby.log"
@@ -25,9 +25,11 @@ crabby_log_file: "/var/log/crabby/crabby.log"
 crabby_service_options:
   - "config={{ crabby_conf_file }}"
 
-selenium_proxy_port: 4000
-selenium_hub_host: hub
-selenium_hub_port: 4444
+crabby_caddy_root_path: /srv/caddy
+
+crabby_selenium_proxy_port: 4000
+crabby_selenium_hub_host: hub
+crabby_selenium_hub_port: 4444
 
 crabby_configuration:
   jobs:

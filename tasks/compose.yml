@@ -2,7 +2,7 @@
 - block:
   - name: create caddy configs directory
     file:
-      path: /srv/caddy/config
+      path: "{{ crabby_caddy_root_path }}/config"
       state: directory
       owner: root
       group: root
@@ -10,7 +10,7 @@
 
   - name: create caddy state directory
     file:
-      path: /srv/caddy/.caddy
+      path: "{{ crabby_caddy_root_path }}/.caddy"
       state: directory
       owner: root
       group: root
@@ -19,7 +19,7 @@
   - name: deploy caddy file
     template:
       src: Caddyfile.j2
-      dest: /srv/caddy/Caddyfile
+      dest: "{{ crabby_caddy_root_path }}/config/Caddyfile"
       owner: root
       group: root
       mode: 0640
