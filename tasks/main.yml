@@ -2,34 +2,22 @@
 # tasks file for ansible-role-crabby
 - name: Set facts
   include_tasks: set_facts.yml
-  tags:
-    - all
 
 - name: Setup prereqs
   include_tasks: prereqs.yml
   when: is_crabby
-  tags:
-    - install
 
 - name: Install crabby
   include_tasks: install.yml
   when: is_crabby
-  tags:
-    - install
 
 - name: Setup configs
   include_tasks: config.yml
   when: is_crabby
-  tags:
-    - config
 
 - name: Setup services
   include_tasks: service.yml
   when: is_crabby
-  tags:
-    - config
 
 - name: Deploy compose
   include_tasks: compose.yml
-  tags:
-    - install

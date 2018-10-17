@@ -43,7 +43,7 @@
       src: "{{ crabby_bin_path }}/{{ crabby_release_name }}"
       dest: "{{ item }}"
       state: link
-    with_items:
+    loop:
       - "{{ crabby_bin_path }}/crabby"
       - /usr/bin/crabby
 
