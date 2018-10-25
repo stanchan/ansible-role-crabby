@@ -1,0 +1,45 @@
+---
+- block:
+  - name: Create crabby group
+    group:
+      name: "{{ crabby_group }}"
+      system: yes
+      state: present
+    when: crabby_group != "root"
+
+  - name: Create crabby user
+    user:
+      name: "{{ crabby_user }}"
+      state: present
+      comment: "{{ crabby_user }}"
+      group: "{{ crabby_group }}"
+      shell: /sbin/nologin
+      createhome: no
+      system: yes
+    when: crabby_user != "root"
+
+  - name: Check filesystem paths for bin deployment
+    file:
+      dest: "{{ item }}"
+      owner: "{{ crabby_user }}"
+      group: "{{ crabby_group }}"
+      state: directory
+    loop:
+      - "{{ crabby_root_path }}"
+      - "{{ crabby_releases_path }}"
+      - "{{ crabby_bin_path }}"
+      - "{{ crabby_conf_file | dirname }}"
+      - "{{ crabby_log_file | dirname }}"
+  when: crabby_deploy_mode == "bin"
+
+- block:
+  - name: Check filesystem paths for docker deployment
+    file:
+      dest: "{{ item }}"
+      owner: "{{ crabby_user }}"
+      group: "{{ crabby_group }}"
+      state: directory
+    loop:
+      - "{{ crabby_root_path }}"
+      - "{{ crabby_conf_file | dirname }}"
+  when: crabby_deploy_mode == "docker"

@@ -14,8 +14,8 @@ crabby_url: "https://github.com/stanchan/crabby/releases/download/{{ crabby_vers
 crabby_force_deploy: no
 crabby_ssl_verify: yes
 
-crabby_user: crabby
-crabby_group: crabby
+crabby_user: "{{ 'crabby' if crabby_deploy_mode == 'bin' else 'root' }}"
+crabby_group: "{{ 'crabby' if crabby_deploy_mode == 'bin' else 'root' }}"
 
 crabby_conf_file: "{{ crabby_root_path }}/config/config.yaml"
 crabby_bin_path: "{{ crabby_root_path }}/bin"

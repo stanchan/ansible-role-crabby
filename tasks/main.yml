@@ -3,20 +3,21 @@
 - name: Set facts
   include_tasks: set_facts.yml
 
-- name: Setup prereqs
-  include_tasks: prereqs.yml
-  when: is_crabby
+- block:
+  - name: Setup prereqs
+    include_tasks: prereqs.yml
 
-- name: Install crabby
-  include_tasks: install.yml
-  when: is_crabby
+  - name: Run setup
+    include_tasks: setup.yml
 
-- name: Setup configs
-  include_tasks: config.yml
-  when: is_crabby
+  - name: Install crabby
+    include_tasks: install.yml
 
-- name: Setup services
-  include_tasks: service.yml
+  - name: Setup configs
+    include_tasks: config.yml
+
+  - name: Setup services
+    include_tasks: service.yml
   when: is_crabby
 
 - name: Deploy compose
