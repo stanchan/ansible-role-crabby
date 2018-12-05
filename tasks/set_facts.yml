@@ -1,11 +1,12 @@
 ---
 - name: Set roles
   set_fact:
-    is_crabby: "{{ inventory_hostname in groups['crabby'] | default([]) }}"
-    is_selenium_caddy: "{{ inventory_hostname in groups['selenium_caddy'] | default([]) }}"
-    is_selenium_hub: "{{ inventory_hostname in groups['selenium_hub'] | default([]) }}"
-    is_selenium_chrome: "{{ inventory_hostname in groups['selenium_chrome'] | default([]) }}"
-    is_selenium_firefox: "{{ inventory_hostname in groups['selenium_firefox'] | default([]) }}"
+    is_crabby: "{{ inventory_hostname in groups['crabby'] | d([]) }}"
+    is_selenium_caddy: "{{ inventory_hostname in groups['selenium_caddy'] | d([]) }}"
+    is_selenium_hub: "{{ inventory_hostname in groups['selenium_hub'] | d([]) }}"
+    is_selenium_chrome: "{{ inventory_hostname in groups['selenium_chrome'] | d([]) }}"
+    is_selenium_firefox: "{{ inventory_hostname in groups['selenium_firefox'] | d([]) }}"
+    cacheable: yes
 
 - name: Set crabby_root_path if deployment is bin
   set_fact:

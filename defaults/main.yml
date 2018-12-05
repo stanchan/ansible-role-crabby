@@ -72,4 +72,5 @@ crabby_configuration:
   internal-metrics-gathering-interval: 15
 
 crabby_compose_template: docker-compose.yml.j2
+crabby_caddy_version: 0.11.1
 crabby_network_type: bridge

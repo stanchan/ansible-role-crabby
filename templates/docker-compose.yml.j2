@@ -4,7 +4,7 @@ version: '3'
 services:
 {% if is_selenium_caddy %}
   caddy:
-    image: "stanchan/caddy:0.10.11"
+    image: "stanchan/caddy:{{ crabby_caddy_version }}"
     restart: unless-stopped
     hostname: caddy
     volumes:
