@@ -17,3 +17,4 @@ galaxy_info:
     - crabby
 
 dependencies:
+  - { role: docker }
